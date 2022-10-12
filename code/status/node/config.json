@@ -1,0 +1,13 @@
+{
+    "interval": 20000,
+    "services": [
+        {
+            "name": "peachme API",
+            "url": "http://api.peachme.io:8090/health"
+        },
+        {
+            "name": "peachme website",
+            "url": "http://peachme.io:8080"
+        }
+    ]
+}

@@ -1,0 +1,41 @@
+#!/usr/bin/env node
+
+(async () => {
+    const fs = require("fs")
+    const { exec } = require("child_process")
+
+  const usage = "peachme [-h|--help] <file>";
+  args = process.argv.slice(2);
+  if (args.indexOf("-h") > 0 || args.indexOf("--help") > 0) {
+    console.log(usage);
+    process.exit(0);
+  }
+  const filePath = args[0];
+  if (!fs.existsSync(filePath)) {
+    console.log(`${usage}
+
+file ${filePath} does not exist`);
+  }
+  const request = {
+    image: fs.readFileSync(filePath).toString("base64"),
+  };
+  const res = await fetch(
+    "http://api.peachme.io:8090/kissme", 
+    {
+      body: JSON.stringify(request),
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  if (res.ok) {
+    const result = await res.json()
+    fs.writeFileSync("/tmp/output.png", Buffer.from(result.image.split(",")[1], "base64"), {
+        encoding: "utf-8"
+    })
+    exec("open /tmp/output.png", () => {})
+  } else {
+    throw new Error("pas de chance");
+  }
+})()

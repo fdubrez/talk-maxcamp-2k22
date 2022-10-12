@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Peachme status page</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="style.css" />
+
+</head>
+
+<body>
+    <h1>Peachme services status</h1>
+    <section id="main">
+    </section>
+    <script type="text/javascript">
+        const events = new EventSource('http://status.peachme.io:9090/events');
+
+        const statusToText = ({status}) => {
+            switch(status) {
+                case null:
+                    return "⁉️"
+                case -1:
+                    return "mauvaise ambiance c'est tout pété"
+                case 200:
+                    return "200 ✅"
+                default:
+                    return `${status} 🚨`
+            }
+        }
+
+        events.onmessage = (event) => {
+            const services = JSON.parse(event.data);
+            console.log(services);
+            document.getElementById("main").innerHTML = Object.keys(services).map(x => `<h3>${x}</h3>
+<p>GET ${services[x].url} ${statusToText(services[x])}</p>
+            `).join("\n")
+
+        };
+    </script>
+</body>
+
+</html>

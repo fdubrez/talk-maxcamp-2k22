@@ -1,0 +1,30 @@
+#!/bin/bash
+
+USAGE="📝 peachme [-h|--help] <image>"
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    --help|-h)
+      echo $USAGE
+      exit 0
+      ;;
+    -*|--*)
+      echo "Unknown option $1"
+      exit 1
+      ;;
+    *)
+      FILE="$1"
+      break
+      ;;
+  esac
+done
+
+if [ ! -f "$FILE" ]; then
+    echo "❌ $FILE does not exist."
+    exit 1
+fi
+
+curl -s -H 'Content-Type: application/json' \
+  -d '{"image": "'$(base64 "$FILE")'"}' \
+  http://peachme.io:8090/kissme \
+  |jq --raw-output '.image' | cut -d ',' -f2 | base64 --decode > /tmp/output.png
+open /tmp/output.png
