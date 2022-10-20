@@ -4,7 +4,7 @@
 cargo run --release -- francois.png
 
 ## Choix pour base64
-Pour l'implémentation en Rust, il a été décidé d'utiliser au mins une libraire : base64.
+Pour l'implémentation en Rust, il a été décidé d'utiliser au moins une librairie : base64.
 
 Dans la mesure où l'implementation manuel de cette fonctionnalité semble hors sujet  pour le challenge, il a été juger acceptable de prendre cet librairie.
 
